@@ -17,21 +17,30 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Create objects
-const geometry = new THREE.SphereGeometry(1, 32, 32);
-const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-const sun = new THREE.Mesh(geometry, material);
+
+// Load textures
+const textureLoader = new THREE.TextureLoader();
+
+const planetTexture = textureLoader.load('/textures/planet_texture.jpg');
+const sunTexture = textureLoader.load('/textures/sun_texture.jpg');
+const shuttleTexture = textureLoader.load('/textures/shuttle_texture.jpg');
+
+// Create materials with textures
+const planetMaterial = new THREE.MeshBasicMaterial({ map: planetTexture });
+const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
+const shuttleMaterial = new THREE.MeshBasicMaterial({ map: shuttleTexture });
+
+const sun = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), sunMaterial);
 scene.add(sun);
 
 const earthOrbit = new THREE.Object3D();
 scene.add(earthOrbit);
 
-const earth = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0x0000ff }));
-earth.position.set(3, 0, 0);
+const earth = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 10), planetMaterial);
+earth.position.set(9, 0, 0);
 earthOrbit.add(earth);
 
-// Create a space shuttle geometry
-const shuttleGeometry = new THREE.BoxGeometry(0.5, 0.5 , 1);
-const shuttleMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const shuttleGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.5);
 const shuttle = new THREE.Mesh(shuttleGeometry, shuttleMaterial);
 shuttle.position.set(5, 0, 0);
 scene.add(shuttle);
@@ -81,7 +90,6 @@ camera.position.copy(shuttle.position).add(cameraOffset);
 camera.lookAt(shuttle.position);
 
 // Create an animation loop
-// Create an animation loop
 function animate() {
   requestAnimationFrame(animate);
 
@@ -122,7 +130,7 @@ function animate() {
   }
 
   // Update the camera position to follow the shuttle
-  const cameraOffset = new THREE.Vector3(0, 3, -5);
+  const cameraOffset = new THREE.Vector3(0, 1, -2);
   const cameraPosition = shuttle.position.clone().add(cameraOffset);
   camera.position.copy(cameraPosition);
 
