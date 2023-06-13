@@ -12,9 +12,26 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 // Create a renderer
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+// Set the renderer's pixel ratio to match the device's pixel ratio
+renderer.setPixelRatio(window.devicePixelRatio);
+
+// Set the renderer to automatically adjust its size when the window is resized
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Set the CSS style of the renderer's canvas to cover the entire screen
+renderer.domElement.style.position = 'fixed';
+renderer.domElement.style.top = '0';
+renderer.domElement.style.left = '0';
+renderer.domElement.style.width = '100%';
+renderer.domElement.style.height = '100%';
 
 // Create objects
 
